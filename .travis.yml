@@ -1,0 +1,17 @@
+language: cpp
+sudo: required
+dist: trusty
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install libqt5-dev qt5-qmake
+install: make
+compiler: c++
+script:
+  - mkdir build
+  - cd build
+  - qmake ../ApplicationServer.pro -spec unix CONFIG+=release CONFIG+=test
+  - make qmake_all
+  - make
+  - cp ApplicationServerCore/release/ApplicationServerCore.so ApplicationServerTest/release/ApplicationServerCore.so
+  - cp ApplicationServerInterface/release/ApplicationServerInterface.so ApplicationServerTest/release/ApplicationServerInterface.so
+  - ApplicationServerTest/release/ApplicationServerTest --platform offscreen

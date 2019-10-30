@@ -8,14 +8,21 @@
       "type": "shell",
       "windows": {
         "command": "Remove-Item",
-        "args": ["-Force", "-Recurse", "-Path", "${workspaceFolder}/../ApplicationServer-build/*"]
-
+        "args": [
+          "-Force",
+          "-Recurse",
+          "-Path",
+          "${workspaceFolder}/../ApplicationServer-build*"
+        ]
       },
       "linux": {
         "command": "rm",
-        "args": ["-r", "-f", "${workspaceFolder}/../ApplicationServer-build/debug"]
-
-      },
+        "args": [
+          "-r",
+          "-f",
+          "${workspaceFolder}/../ApplicationServer-build/debug"
+        ]
+      }
     },
     {
       "label": "createBuildFolder",
@@ -52,10 +59,60 @@
       }
     },
     {
+      "label": "qmakeTest",
+      "type": "shell",
+      "dependsOn": "createBuildFolder",
+      "windows": {
+        "command": "qmake",
+        "args": [
+          "${workspaceFolder}/ApplicationServer.pro",
+          "-spec",
+          "win32-msvc",
+          "CONFIG+=qml_debug",
+          "CONFIG+=test"
+        ]
+      },
+      "linux": {
+        "command": "qmake",
+        "args": [
+          "${workspaceFolder}/ApplicationServer.pro",
+          "-spec",
+          "unix",
+          "CONFIG+=qml_debug",
+          "CONFIG+=test"
+        ]
+      },
+      "problemMatcher": "$gcc",
+      "options": {
+        "cwd": "${workspaceFolder}/../ApplicationServer-build/debug"
+      }
+    },
+    {
       "label": "jomQmake",
       "type": "shell",
       "dependsOn": ["qmake"],
-      "command": "jom",
+      "windows": {
+        "command": "mingw32-make"
+      },
+      "linux": {
+        "command": "make"
+      },
+      "args": ["qmake_all"],
+      "problemMatcher": "$gcc",
+      "options": {
+        "cwd": "${workspaceFolder}/../ApplicationServer-build/debug"
+      }
+    },
+    {
+      "label": "jomQmakeTest",
+      "type": "shell",
+      "dependsOn": ["qmakeTest"],
+      "windows": {
+        "command": "mingw32-make"
+      },
+      "linux": {
+        "command": "make"
+      },
       "args": ["qmake_all"],
       "problemMatcher": "$gcc",
       "options": {
@@ -66,30 +123,41 @@
       "label": "compile",
       "type": "shell",
       "dependsOn": ["jomQmake"],
-      "command": "jom",
+      "windows": {
+        "command": "mingw32-make"
+      },
+      "linux": {
+        "command": "make"
+      },
       "problemMatcher": "$gcc",
       "options": {
         "cwd": "${workspaceFolder}/../ApplicationServer-build/debug"
       }
     },
     {
-      "label": "build",
+      "label": "compileTest",
       "type": "shell",
-      "command": "cp",
-      "dependsOn": ["compile"],
-      "problemMatcher": "$gcc",
+      "dependsOn": ["jomQmakeTest"],
       "windows": {
-        "args": [
-          "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServerInterface/debug/ApplicationServerInterface.dll",
-          "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/ApplicationServerInterface.dll"
-        ]
+        "command": "mingw32-make"
       },
       "linux": {
-        "args": [
-          "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServerInterface/debug/ApplicationServerInterface.so.1",
-          "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/ApplicationServerInterface.so.1"
-        ]
+        "command": "make"
+      },
+      "problemMatcher": "$gcc",
+      "options": {
+        "cwd": "${workspaceFolder}/../ApplicationServer-build/debug"
       }
+    },
+    {
+      "label": "test",
+      "dependsOn": ["compileTest"],
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "build",
+      "dependsOn": ["compile"],
+      "problemMatcher": "$gcc"
     }
   ]
 }

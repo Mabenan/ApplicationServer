@@ -3,14 +3,15 @@
     "configurations": [
       {
         "name": "(msvc) Launch",
-        "type": "cppvsdbg",
+        "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/ApplicationServer.exe",
-        "args": [],
         "stopAtEntry": false,
         "cwd": "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/",
-        "environment": [],
-        "externalConsole": true
+        "externalConsole": true,
+        "additionalSOLibSearchPath": "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/ApplicationServerInterface/debug;${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/ApplicationServerCore/debug",
+        "MIMode": "gdb",
+        "miDebuggerPath": "C:/mingw-w64/mingw64/bin/gdb.exe"
       }
     ]
   }
