@@ -1,0 +1,95 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "init",
+      "type": "shell",
+      "windows": {
+        "command": "Remove-Item",
+        "args": ["-Force", "-Recurse", "-Path", "${workspaceFolder}/../ApplicationServer-build/*"]
+
+      },
+      "linux": {
+        "command": "rm",
+        "args": ["-r", "-f", "${workspaceFolder}/../ApplicationServer-build/debug"]
+
+      },
+    },
+    {
+      "label": "createBuildFolder",
+      "dependsOn": "init",
+      "type": "shell",
+      "command": "mkdir",
+      "args": ["-p", "${workspaceFolder}/../ApplicationServer-build/debug"]
+    },
+    {
+      "label": "qmake",
+      "type": "shell",
+      "dependsOn": "createBuildFolder",
+      "windows": {
+        "command": "qmake",
+        "args": [
+          "${workspaceFolder}/ApplicationServer.pro",
+          "-spec",
+          "win32-msvc",
+          "CONFIG+=qml_debug"
+        ]
+      },
+      "linux": {
+        "command": "qmake",
+        "args": [
+          "${workspaceFolder}/ApplicationServer.pro",
+          "-spec",
+          "unix",
+          "CONFIG+=qml_debug"
+        ]
+      },
+      "problemMatcher": "$gcc",
+      "options": {
+        "cwd": "${workspaceFolder}/../ApplicationServer-build/debug"
+      }
+    },
+    {
+      "label": "jomQmake",
+      "type": "shell",
+      "dependsOn": ["qmake"],
+      "command": "jom",
+      "args": ["qmake_all"],
+      "problemMatcher": "$gcc",
+      "options": {
+        "cwd": "${workspaceFolder}/../ApplicationServer-build/debug"
+      }
+    },
+    {
+      "label": "compile",
+      "type": "shell",
+      "dependsOn": ["jomQmake"],
+      "command": "jom",
+      "problemMatcher": "$gcc",
+      "options": {
+        "cwd": "${workspaceFolder}/../ApplicationServer-build/debug"
+      }
+    },
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "cp",
+      "dependsOn": ["compile"],
+      "problemMatcher": "$gcc",
+      "windows": {
+        "args": [
+          "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServerInterface/debug/ApplicationServerInterface.dll",
+          "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/ApplicationServerInterface.dll"
+        ]
+      },
+      "linux": {
+        "args": [
+          "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServerInterface/debug/ApplicationServerInterface.so.1",
+          "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/ApplicationServerInterface.so.1"
+        ]
+      }
+    }
+  ]
+}

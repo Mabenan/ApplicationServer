@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "(msvc) Launch",
+        "type": "cppvsdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/ApplicationServer.exe",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/",
+        "environment": [],
+        "externalConsole": true
+      }
+    ]
+  }
