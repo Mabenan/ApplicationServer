@@ -3,7 +3,8 @@ sudo: required
 dist: trusty
 before_install:
   - sudo apt-get update
-  - sudo apt-get install libqt5-dev qt5-qmake
+  - sudo apt-get install qt5-default 
+  - sudo apt-get install qttools5-dev-tools 
 install: make
 compiler: c++
 script:
