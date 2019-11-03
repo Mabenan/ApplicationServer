@@ -1,5 +1,5 @@
 # Application Server
-https://travis-ci.org/Mabenan/ApplicationServer.svg?branch=master
+![](https://travis-ci.org/Mabenan/ApplicationServer.svg?branch=master)
 
 This is an Application Server framework for C++
 
