@@ -2,6 +2,7 @@
 #define MESSAGELOGGER_H
 
 #include <QList>
+#include <iostream>
 
 
 
@@ -18,6 +19,8 @@ public:
 
    void log(QString msg){
        this->loggedMessages.push_back(msg);
+       std::string msgString = msg.toStdString();
+       std::cout << msgString << std::endl;
    }
 private:
    static MessageLogger* _instance;
