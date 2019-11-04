@@ -7,11 +7,6 @@ before_install:
   - sudo apt-get install qttools5-dev-tools 
 compiler: c++
 script:
-  - mkdir build
-  - cd build
-  - qmake ../ApplicationServer.pro -spec linux-g++ CONFIG+=release CONFIG+=test
-  - make qmake_all
+  - cmake .
   - make
-  - cp ApplicationServerCore/release/ApplicationServerCore.so ApplicationServerTest/release/ApplicationServerCore.so
-  - cp ApplicationServerInterface/release/ApplicationServerInterface.so ApplicationServerTest/release/ApplicationServerInterface.so
-  - ApplicationServerTest/release/ApplicationServerTest --platform offscreen
+  - bin/ApplicationServerTest --platform offscreen
