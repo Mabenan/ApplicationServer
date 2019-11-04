@@ -1,17 +1,10 @@
 language: cpp
 sudo: required
 dist: trusty
-os: linux
-  addons:
-    apt:
-      sources:
-        - ubuntu-toolchain-r-test
-      packages:
-        - g++-7
-env:
-  - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 before_install:
-  - eval "${MATRIX_EVAL}"
+  - sudo apt-get install g++-7
+  - export CC=gcc-7
+  - export CXX=g++-7
   - sudo apt-get update
   - sudo apt-get install qt5-default 
   - sudo apt-get install qttools5-dev-tools 
