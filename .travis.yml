@@ -2,7 +2,10 @@ language: cpp
 sudo: required
 dist: trusty
 before_install:
-  - sudo apt-get install g++-7
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update
+  - sudo apt-get install gcc-snapshot
+  - sudo apt-get install gcc-6 g++-6
   - export CC=gcc-7
   - export CXX=g++-7
   - sudo apt-get update
