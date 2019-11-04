@@ -4,9 +4,9 @@ dist: trusty
 before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get -q update
-  - sudo apt-get -y install gcc-7 g++-7
-  - export CC=gcc-7
-  - export CXX=g++-7
+  - sudo apt-get -y install gcc-9 g++-9
+  - export CC=gcc-9
+  - export CXX=g++-9
   - sudo apt-get update
   - sudo apt-get install qt5-default 
   - sudo apt-get install qttools5-dev-tools 
