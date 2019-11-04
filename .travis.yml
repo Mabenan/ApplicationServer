@@ -5,12 +5,12 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install qt5-default 
   - sudo apt-get install qttools5-dev-tools 
-  - sudo apt-get install cmake
+  - sudo apt-get install cmake gcc-9 g++-9
 compiler: c++
 script:
   # Link gcc-6 and g++-6 to their standard commands
-  - ln -s /usr/bin/gcc-9 /usr/local/bin/gcc
-  - ln -s /usr/bin/g++-9 /usr/local/bin/g++
+  - sudo ln -s /usr/bin/gcc-9 /usr/local/bin/gcc
+  - sudo ln -s /usr/bin/g++-9 /usr/local/bin/g++
   # Export CC and CXX to tell cmake which compiler to use
   - export CC=/usr/bin/gcc-9
   - export CXX=/usr/bin/g++-9
