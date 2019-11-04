@@ -5,13 +5,21 @@
         "name": "(msvc) Launch",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/ApplicationServer.exe",
+        "program": "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/ApplicationServer.exe",
         "stopAtEntry": false,
-        "cwd": "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/",
+        "cwd": "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/",
         "externalConsole": true,
-        "additionalSOLibSearchPath": "${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/ApplicationServerInterface/debug;${workspaceFolder}/../ApplicationServer-build/debug/ApplicationServer/debug/ApplicationServerCore/debug",
         "MIMode": "gdb",
-        "miDebuggerPath": "C:/mingw-w64/mingw64/bin/gdb.exe"
+        "preLaunchTask": "cpLibs",
+        "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
+          "logging": { "engineLogging": true },
+        "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+        ]
       }
     ]
   }

@@ -40,7 +40,8 @@
         "args": [
           "${workspaceFolder}/ApplicationServer.pro",
           "-spec",
-          "win32-msvc",
+          "win32-g++",
+          "CONFIG+=debug",
           "CONFIG+=qml_debug"
         ]
       },
@@ -50,7 +51,8 @@
           "${workspaceFolder}/ApplicationServer.pro",
           "-spec",
           "unix",
-          "CONFIG+=qml_debug"
+          "CONFIG+=qml_debug",
+          "CONFIG+=debug"
         ]
       },
       "problemMatcher": "$gcc",
@@ -67,8 +69,9 @@
         "args": [
           "${workspaceFolder}/ApplicationServer.pro",
           "-spec",
-          "win32-msvc",
+          "win32-g++",
           "CONFIG+=qml_debug",
+          "CONFIG+=debug",
           "CONFIG+=test"
         ]
       },
@@ -79,6 +82,7 @@
           "-spec",
           "unix",
           "CONFIG+=qml_debug",
+          "CONFIG+=debug",
           "CONFIG+=test"
         ]
       },
@@ -148,6 +152,15 @@
       "options": {
         "cwd": "${workspaceFolder}/../ApplicationServer-build/debug"
       }
+    },
+    {
+      "label": "cpLibs",
+      "type": "shell",
+      "command": "${workspaceFolder}/cpLibs.bat",
+      "options": {
+        "cwd": "${workspaceFolder}/../ApplicationServer-build/debug"
+      },
+      "problemMatcher": "$gcc"
     },
     {
       "label": "test",
