@@ -56,8 +56,8 @@ void FindsPlugins::myMessageOutput(QtMsgType type, const QMessageLogContext &con
 void FindsPlugins::findsListPlugin()
 {
     this->app->handleUserInput("list");
-    // QVERIFY(MessageLogger::instance()->loggedMessages.contains("\"list\""));
-    // QVERIFY(!MessageLogger::instance()->loggedMessages.contains("not found"));
+    QVERIFY(MessageLogger::instance()->loggedMessages.contains("\"list\""));
+    QVERIFY(!MessageLogger::instance()->loggedMessages.contains("not found"));
 }
 
 QTEST_APPLESS_MAIN(FindsPlugins)
