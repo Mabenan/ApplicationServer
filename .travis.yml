@@ -22,3 +22,4 @@ script:
   - ls bin
   - cp lib bin/plugins
   - make test
+  - pgrep -f "*Test*" | xargs kill
