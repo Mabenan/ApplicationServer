@@ -14,5 +14,5 @@ qt5_use_modules(ApplicationServerTest Core)
   qt5_use_modules(ApplicationServerTest Test)
 
 add_test(ApplicationServerTest ${CMAKE_BINARY_DIR}/bin/ApplicationServerTest)
-    set_property(TEST ApplicationServerTest PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CMAKE_BINARY_DIR}")
+    set_property(TEST ApplicationServerTest PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CMAKE_BINARY_DIR}/bin:${CMAKE_BINARY_DIR}/lib")
 target_link_libraries(ApplicationServerTest ApplicationServerCore ApplicationServerInterface)

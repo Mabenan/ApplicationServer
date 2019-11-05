@@ -20,4 +20,5 @@ script:
   - cmake --build .
   - ls lib
   - ls bin
+  - cp lib bin/plugins
   - make test
