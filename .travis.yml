@@ -22,4 +22,3 @@ script:
   - ls bin
   - cp -r lib bin/plugins
   - make test
-  - pgrep ApplicationServerTest | xargs kill
