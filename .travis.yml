@@ -8,7 +8,6 @@ before_install:
   - sudo apt-get -y install gcc-9 g++-9
   - export CC=gcc-9
   - export CXX=g++-9
-  - sudo apt-get update
   - sudo apt-get install cmake
   - sudo apt-get install qt510-meta-full
   - source /opt/qt510/bin/qt510-env.sh
@@ -19,4 +18,4 @@ script:
   - cd build
   - cmake ..
   - cmake --build .
-  - make test
+  - LD_LIBRARY_PATH=/home/travis/build/Mabenan/ApplicationServer/build/lib make test
