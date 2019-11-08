@@ -14,7 +14,12 @@ addons:
 before_install:
   - git clone https://code.qt.io/qt/qtftp.git/
   - cd qtftp
-  - qmake
+  - sudo rm -r -f examples
+  - rm qtftp.pro
+  - echo TEMPLATE = subdirs >| qtftp.pro
+  - echo module_qtftp_src.subdir = src >> qtftp.pro
+  - echo module_qtftp_src.target = sub-src >> qtftp.pro 
+  - echo SUBDIRS = module_qtftp_src >> qtftp.pro
   - qmake -r
   - make
   - sudo make install
