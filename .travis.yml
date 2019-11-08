@@ -1,16 +1,33 @@
 language: cpp
 sudo: required
-dist: trusty
+dist: bionic
+addons:
+  apt:
+    packages:
+    - qtbase5-dev
+    - qtbase5-dev-tools
+    - qt5-default
+    - qtdeclarative5-dev
+    - qml-module-qtquick-controls
+    - qml-module-qtquick-controls2
+    - cmake
 before_install:
-  - sudo add-apt-repository --yes ppa:beineri/opt-qt-5.10.1-trusty
-  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-  - sudo apt-get -q update
-  - sudo apt-get -y install gcc-9 g++-9
-  - export CC=gcc-9
-  - export CXX=g++-9
-  - sudo apt-get install cmake
-  - sudo apt-get install qt510-meta-full
-  - source /opt/qt510/bin/qt510-env.sh
+  - git clone https://code.qt.io/qt/qtftp.git/
+  - cd qtftp
+  - qmake
+  - qmake -r
+  - make
+  - sudo make install
+  - cd ..
+  - sudo rm -r -f qtftp
+  - git clone --recursive https://codereview.qt-project.org/qt-labs/qthttpserver
+  - cd qthttpserver
+  - qmake
+  - qmake -r
+  - make
+  - sudo make install
+  - cd ..
+  - sudo rm -r -f qthttpserver
 compiler: g++
 script:
   - qmake --version

@@ -2,6 +2,8 @@
     "files.associations": {
         "iostream": "cpp",
         "random": "cpp",
-        "*.moc": "cpp"
+        "*.moc": "cpp",
+        "qhttpserver": "cpp",
+        "qpluginloader": "cpp"
     }
 }
