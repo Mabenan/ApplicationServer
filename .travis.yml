@@ -28,6 +28,10 @@ before_install:
   - git clone --recursive https://codereview.qt-project.org/qt-labs/qthttpserver
   - cd qthttpserver
   - qmake
+  - cd src/sslserver
+  - qmake -r
+  - make
+  - cd ../..
   - qmake -r
   - make
   - sudo make install
