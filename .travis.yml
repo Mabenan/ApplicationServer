@@ -16,13 +16,7 @@ addons:
 before_install:
   - git clone https://code.qt.io/qt/qtftp.git/
   - cd qtftp
-  - sudo rm -r -f examples
-  - rm qtftp.pro
-  - echo TEMPLATE = subdirs >| qtftp.pro
-  - echo module_qtftp_src.subdir = src >> qtftp.pro
-  - echo module_qtftp_src.target = sub-src >> qtftp.pro 
-  - echo SUBDIRS = module_qtftp_src >> qtftp.pro
-  - qmake -r
+  - qmake
   - make
   - sudo make install
   - cd ..
@@ -30,7 +24,6 @@ before_install:
   - git clone --recursive https://codereview.qt-project.org/qt-labs/qthttpserver
   - cd qthttpserver
   - qmake
-  - qmake -r
   - make
   - sudo make install
   - cd ..
