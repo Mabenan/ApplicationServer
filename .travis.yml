@@ -7,6 +7,7 @@ addons:
     - sourceline: 'ppa:beineri/opt-qt-5.12.3-bionic'
     packages:
     - qt512-meta-full
+    - libgl1-mesa-dev
     - cmake
 before_install:
   - source /opt/qt512/bin/qt512-env.sh
