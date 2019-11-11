@@ -10,6 +10,7 @@ addons:
     - qtdeclarative5-dev
     - qml-module-qtquick-controls
     - qml-module-qtquick-controls2
+    - qtbase5-private-dev
     - cmake
 before_install:
   - git clone https://code.qt.io/qt/qtftp.git/
