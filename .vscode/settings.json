@@ -4,6 +4,7 @@
         "random": "cpp",
         "*.moc": "cpp",
         "qhttpserver": "cpp",
-        "qpluginloader": "cpp"
+        "qpluginloader": "cpp",
+        "qlist": "cpp"
     }
 }
