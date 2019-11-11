@@ -9,7 +9,7 @@ addons:
     - qt512-meta-full
     - cmake
 before_install:
-  - Source /opt/qt512/bin/qt512-env.sh
+  - source /opt/qt512/bin/qt512-env.sh
   - git clone https://code.qt.io/qt/qtftp.git/
   - cd qtftp
   - sudo rm -r -f examples
