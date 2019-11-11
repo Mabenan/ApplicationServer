@@ -3,17 +3,13 @@ sudo: required
 dist: bionic
 addons:
   apt:
+    sources:
+    - sourceline: 'ppa:beineri/opt-qt-5.12.3-bionic'
     packages:
-    - qtbase5-dev
-    - qtbase5-dev-tools
-    - qt5-default
-    - qtdeclarative5-dev
-    - qtdeclarative5-private-dev
-    - qml-module-qtquick-controls
-    - qml-module-qtquick-controls2
-    - qtbase5-private-dev
+    - qt512-meta-full
     - cmake
 before_install:
+  - Source /opt/qt512/bin/qt512-env.sh
   - git clone https://code.qt.io/qt/qtftp.git/
   - cd qtftp
   - sudo rm -r -f examples
