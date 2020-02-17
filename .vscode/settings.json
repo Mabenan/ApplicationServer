@@ -5,6 +5,8 @@
         "*.moc": "cpp",
         "qhttpserver": "cpp",
         "qpluginloader": "cpp",
-        "qlist": "cpp"
+        "qlist": "cpp",
+        "qdebug": "cpp",
+        "new": "cpp"
     }
 }
