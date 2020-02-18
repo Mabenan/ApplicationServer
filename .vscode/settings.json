@@ -7,6 +7,9 @@
         "qpluginloader": "cpp",
         "qlist": "cpp",
         "qdebug": "cpp",
-        "new": "cpp"
-    }
+        "new": "cpp",
+        "*.tcc": "cpp",
+        "string": "cpp"
+    },
+    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
 }
