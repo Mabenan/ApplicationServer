@@ -18,11 +18,6 @@ add_subdirectory(ApplicationServerCore)
 add_subdirectory(ApplicationServerInterface)
 add_subdirectory(ApplicationServer)
 
-install(TARGETS ApplicationServerInterface ApplicationServerCore EXPORT ${CMAKE_PROJECT_NAME} 
-LIBRARY DESTINATION "${LIB_FOLDER}"
-    ARCHIVE DESTINATION "${LIB_FOLDER}"
-    RUNTIME DESTINATION "${EXEC_FOLDER}"
-    INCLUDES DESTINATION "${INCLUDE_FOLDER}")
   export(PACKAGE ${CMAKE_PROJECT_NAME})
 
 include(CMakePackageConfigHelpers)
