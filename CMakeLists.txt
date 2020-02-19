@@ -17,3 +17,43 @@ set(PLUGIN_FOLDER "${EXEC_FOLDER}/plugins")
 add_subdirectory(ApplicationServerCore)
 add_subdirectory(ApplicationServerInterface)
 add_subdirectory(ApplicationServer)
+
+install(TARGETS ApplicationServerInterface ApplicationServerCore EXPORT ${CMAKE_PROJECT_NAME} 
+LIBRARY DESTINATION "${LIB_FOLDER}"
+    ARCHIVE DESTINATION "${LIB_FOLDER}"
+    RUNTIME DESTINATION "${EXEC_FOLDER}"
+    INCLUDES DESTINATION "${INCLUDE_FOLDER}")
+  export(PACKAGE ${CMAKE_PROJECT_NAME})
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file( 
+  "Config.cmake.in" 
+  "${CMAKE_PROJECT_NAME}Config.cmake"
+  INSTALL_DESTINATION ${LIB_FOLDER}
+  PATH_VARS
+    LIB_FOLDER
+  )
+
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+  VERSION 1.0.0
+  COMPATIBILITY SameMajorVersion
+  )
+  
+  export(EXPORT ${CMAKE_PROJECT_NAME}
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.cmake"
+)
+configure_file(${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+  "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.cmake"
+)
+
+### Install Config and ConfigVersion files
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake"
+  DESTINATION "${LIB_FOLDER}"
+  )
+install(
+  EXPORT ${CMAKE_PROJECT_NAME}
+  DESTINATION ${LIB_FOLDER}
+  )
