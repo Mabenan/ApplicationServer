@@ -1,4 +1,4 @@
-#include <application.h>
+#include <ApplicationServerCore>
 #include <QCoreApplication>
 #include <QTimer>
 
