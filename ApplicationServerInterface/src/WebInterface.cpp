@@ -1,2 +1,2 @@
 #include <WebInterface.h>
-#include "moc_webinterface.cpp"
+#include "moc_WebInterface.cpp"

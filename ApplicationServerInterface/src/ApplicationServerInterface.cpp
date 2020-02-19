@@ -1,2 +1,2 @@
 #include <ApplicationServerInterface.h>
-#include "moc_applicationserverinterface.cpp"
+#include "moc_ApplicationServerInterface.cpp"

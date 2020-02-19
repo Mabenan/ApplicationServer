@@ -1,2 +1,2 @@
 #include <ApplicationServerPluginInterface.h>
-#include "moc_applicationserverplugininterface.cpp"
+#include "moc_ApplicationServerPluginInterface.cpp"
