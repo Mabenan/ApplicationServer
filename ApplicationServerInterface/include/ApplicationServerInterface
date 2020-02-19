@@ -1,0 +1,5 @@
+#include <ApplicationServerInterface_export.h>
+#include "CommandInterface.h"
+#include "WebInterface.h"
+#include "ApplicationServerInterface.h"
+#include "ApplicationServerPluginInterface.h"

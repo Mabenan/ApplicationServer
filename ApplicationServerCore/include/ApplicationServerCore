@@ -1,0 +1,3 @@
+#include <ApplicationServerCore_global.h>
+#include "application.h"
+#include "consoleinput.h"
