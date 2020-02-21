@@ -1,5 +1,5 @@
-if(NOT DEFINED ${CMAKE_PROJECT_NAME})
-message("create project")
+
+if(NOT CMAKE_PROJECT_NAME)
 project("ApplicationServer" LANGUAGES CXX)
 endif()
 enable_testing()
