@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <ApplicationServerInterface_export.h>
+class AuthProviderInterface;
 class CommandInterface;
 class WebInterface;
 
@@ -18,6 +19,9 @@ public:
     virtual QList<QString> GetCommands() = 0;
     virtual void registerCommand(CommandInterface * commandInterface)= 0;
     virtual void registerWebInterface(WebInterface * webInterface)= 0;
+    virtual void registerAuthProvider(AuthProviderInterface * authProvider) = 0;
+
+    virtual bool isUserAuthorized(QString user, QString authObject, QMap<QString, QVariant> params) = 0;
 
 };
 

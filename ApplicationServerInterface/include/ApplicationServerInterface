@@ -3,3 +3,4 @@
 #include "WebInterface.h"
 #include "ApplicationServerInterface.h"
 #include "ApplicationServerPluginInterface.h"
+#include "AuthProviderInterface.h"

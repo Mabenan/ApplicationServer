@@ -16,12 +16,14 @@ class APPLICATIONSERVERCORE_EXPORT Application : public ApplicationServerInterfa
 private:
     QMap<QString, CommandInterface*> commands;
     QMap<QString, WebInterface*> webInterfaces;
+    QList<AuthProviderInterface *> authProviders;
     QHttpServer * httpServer;
 public:
     explicit Application(QObject *parent = nullptr);
     void handleUserInput(QString);
         void initialize();
         QThread inputThread;
+
 signals:
     void finished();
     void startInput();
@@ -33,6 +35,10 @@ public:
     QList<QString> GetCommands() override;
     void registerCommand(CommandInterface * commandInterface) override;
     void registerWebInterface(WebInterface * webInterface) override;
+
+	virtual bool isUserAuthorized(QString user, QString authObject,
+			QMap<QString, QVariant> params) override;
+	virtual void registerAuthProvider(AuthProviderInterface *authProvider) override;
 };
 
 #endif // APPLICATION_H
