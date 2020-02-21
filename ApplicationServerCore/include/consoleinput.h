@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <QObject>
+#include <QString>
 
 class ConsoleInput : public QObject
 {    Q_OBJECT
@@ -10,19 +11,7 @@ class ConsoleInput : public QObject
      std::string command;
      ConsoleInput(QObject *parent = nullptr);
  public slots:
-     void execute()
-     {
-         do
-         {
-             std::getline(std::cin, this->command);
-             if(this->command == "stop"){
-                 break;
-             }
-             emit input(QString(this->command.c_str()));
-         } while (1 == 1);
-             emit input(QString(this->command.c_str()));
-             return;
-     }
+     void execute();
 
  signals:
      void input(QString command);

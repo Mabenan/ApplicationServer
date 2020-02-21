@@ -8,6 +8,7 @@
 #include <WebInterface.h>
 Application::Application(QObject *parent) : ApplicationServerInterface(parent)
 {
+    this->httpServer = new QHttpServer(this);
 }
 void Application::start()
 {
@@ -66,7 +67,6 @@ void Application::initialize()
             pluginInterface->init(this);
         }
     }
-    this->httpServer = new QHttpServer(this);
     for (WebInterface *webIf : this->webInterfaces.values())
     {
         this->httpServer->route(webIf->getRoute(this),
