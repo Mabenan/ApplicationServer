@@ -6,6 +6,7 @@
 #include <QLibraryInfo>
 #include <QPluginLoader>
 #include <WebInterface.h>
+#include <QxOrm.h>
 Application::Application(QObject *parent) :
 		ApplicationServerInterface(parent) {
 	this->httpServer = new QHttpServer(this);
@@ -42,6 +43,13 @@ void Application::handleUserInput(QString command) {
 
 void Application::initialize() {
 
+
+	   // Init parameters to connect to database
+	   qx::QxSqlDatabase::getSingleton()->setDriverName("QSQLITE");
+	   qx::QxSqlDatabase::getSingleton()->setDatabaseName("./test_qxorm.db");
+	   qx::QxSqlDatabase::getSingleton()->setHostName("localhost");
+	   qx::QxSqlDatabase::getSingleton()->setUserName("root");
+	   qx::QxSqlDatabase::getSingleton()->setPassword("");
 	QDir pluginsDir = QDir(QCoreApplication::applicationDirPath());
 	pluginsDir.cd("plugins");
 	const auto entryList = pluginsDir.entryList(QDir::Files);
@@ -51,6 +59,7 @@ void Application::initialize() {
 		auto pluginInterface = qobject_cast<ApplicationServerPluginInterface*>(
 				plugin);
 		if (pluginInterface) {
+			pluginInterface->install(this);
 			pluginInterface->init(this);
 		}
 	}

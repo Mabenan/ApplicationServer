@@ -29,7 +29,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5HttpServer REQUIRED)
 qt5_use_modules(${target} Core HttpServer)
-target_link_libraries(${target} ApplicationServerInterface)
+target_link_libraries(${target} ApplicationServerInterface QxOrm)
 target_include_directories(${target}
  PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>

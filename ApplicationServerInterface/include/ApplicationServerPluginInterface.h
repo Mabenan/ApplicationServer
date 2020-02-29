@@ -18,6 +18,7 @@ public:
     }
     virtual~ApplicationServerPluginInterface(){}
     virtual void init(ApplicationServerInterface * app) = 0;
+    virtual void install(ApplicationServerInterface * app) = 0;
 };
 
 Q_DECLARE_INTERFACE(ApplicationServerPluginInterface, ApplicationServerPluginInterface_iid)
