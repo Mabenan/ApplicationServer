@@ -7,6 +7,7 @@
 #include <QPluginLoader>
 #include <WebInterface.h>
 #include <QxOrm.h>
+#include <Plugin.h>
 Application::Application(QObject *parent) :
 		ApplicationServerInterface(parent) {
 	this->httpServer = new QHttpServer(this);
@@ -43,24 +44,41 @@ void Application::handleUserInput(QString command) {
 
 void Application::initialize() {
 
+	// Init parameters to connect to database
+	qx::QxSqlDatabase::getSingleton()->setDriverName("QSQLITE");
+	qx::QxSqlDatabase::getSingleton()->setDatabaseName("./test_qxorm.db");
+	qx::QxSqlDatabase::getSingleton()->setHostName("localhost");
+	qx::QxSqlDatabase::getSingleton()->setUserName("root");
+	qx::QxSqlDatabase::getSingleton()->setPassword("");
 
-	   // Init parameters to connect to database
-	   qx::QxSqlDatabase::getSingleton()->setDriverName("QSQLITE");
-	   qx::QxSqlDatabase::getSingleton()->setDatabaseName("./test_qxorm.db");
-	   qx::QxSqlDatabase::getSingleton()->setHostName("localhost");
-	   qx::QxSqlDatabase::getSingleton()->setUserName("root");
-	   qx::QxSqlDatabase::getSingleton()->setPassword("");
+	qx::dao::create_table<Plugin>();
+
 	QDir pluginsDir = QDir(QCoreApplication::applicationDirPath());
 	pluginsDir.cd("plugins");
 	const auto entryList = pluginsDir.entryList(QDir::Files);
 	for (const QString &fileName : entryList) {
-		QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
-		QObject *plugin = loader.instance();
-		auto pluginInterface = qobject_cast<ApplicationServerPluginInterface*>(
-				plugin);
-		if (pluginInterface) {
-			pluginInterface->install(this);
-			pluginInterface->init(this);
+		try {
+			QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
+			QObject *plugin = loader.instance();
+			auto pluginInterface = qobject_cast<
+					ApplicationServerPluginInterface*>(plugin);
+			if (pluginInterface) {
+				QString plugin_id = loader.fileName();
+				Plugin *pluginObject = new Plugin();
+				pluginObject->id = plugin_id;
+				QSqlError daoError = qx::dao::fetch_by_id(pluginObject);
+				if (daoError.type() != QSqlError::NoError) {
+					qx::dao::insert(pluginObject);
+				}
+				if (!pluginObject->installed) {
+					pluginInterface->install(this);
+					pluginObject->installed = true;
+					qx::dao::save(pluginObject);
+				}
+				pluginInterface->init(this);
+			}
+		} catch (std::exception *exc) {
+			qDebug() << exc->what();
 		}
 	}
 	for (WebInterface *webIf : this->webInterfaces.values()) {
