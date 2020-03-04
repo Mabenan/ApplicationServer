@@ -4,7 +4,6 @@
 #include <ApplicationServerInterface.h>
 
 #include <QObject>
-#include <QtPlugin>
 #include <qstring.h>
 #include <ApplicationServerInterface_export.h>
 
