@@ -18,11 +18,17 @@ private:
     QMap<QString, WebInterface*> webInterfaces;
     QList<AuthProviderInterface *> authProviders;
     QHttpServer * httpServer;
+    QMap<QString, QObject *> genericValues;
+    QMap<QString, QList<QObject *>> genericListValues;
 public:
     explicit Application(QObject *parent = nullptr);
     void handleUserInput(QString);
         void initialize();
         QThread inputThread;
+
+	virtual QList<QObject *> getValues(QString valueName) override;
+	virtual void setValue(QString valueName, QObject * value) override;
+	virtual void addValue(QString valueName, QObject * value) override;
 
 signals:
     void finished();
@@ -39,6 +45,7 @@ public:
 	virtual bool isUserAuthorized(QString user, QString authObject,
 			QMap<QString, QVariant> params) override;
 	virtual void registerAuthProvider(AuthProviderInterface *authProvider) override;
+	virtual QObject * getValue(QString valueName) override;
 };
 
 #endif // APPLICATION_H

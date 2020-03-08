@@ -124,5 +124,33 @@ bool Application::isUserAuthorized(QString user, QString authObject,
 	}
 
 }
+QObject * Application::getValue(QString valueName){
+	if(!this->genericValues.contains(valueName)){
+		return nullptr;
+	}
+	return this->genericValues[valueName];
+}
+
+QList<QObject *> Application::getValues(QString valueName) {
+	if(!this->genericListValues.contains(valueName)){
+			return QList<QObject *>();
+		}
+		return this->genericListValues[valueName];
+}
+
+void Application::setValue(QString valueName, QObject * value) {
+	if(!this->genericValues.contains(valueName)){
+			this->genericValues.insert(valueName, value);
+		}
+    this->genericValues[valueName] = value;
+
+}
+
+void Application::addValue(QString valueName, QObject * value) {
+	if(!this->genericListValues.contains(valueName)){
+				this->genericListValues.insert(valueName, QList<QObject *>());
+			}
+	this->genericListValues[valueName].append(value);
+}
 
 #include "moc_application.cpp"

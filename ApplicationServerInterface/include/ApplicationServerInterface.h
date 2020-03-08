@@ -22,7 +22,10 @@ public:
     virtual void registerAuthProvider(AuthProviderInterface * authProvider) = 0;
 
     virtual bool isUserAuthorized(QString user, QString authObject, QMap<QString, QVariant> params) = 0;
-
+    virtual QObject * getValue(QString valueName) = 0;
+    virtual void setValue(QString valueName, QObject * value) = 0;
+    virtual QList<QObject *> getValues(QString valueName) = 0;
+    virtual void addValue(QString valueName, QObject * value) = 0;
 };
 
 #endif // APPLICATIONSERVERINTERFACE_H
