@@ -8,6 +8,7 @@
 #include <WebInterface.h>
 #include <QxOrm.h>
 #include <Plugin.h>
+#include <QxConnect.h>
 Application::Application(QObject *parent) :
 		ApplicationServerInterface(parent) {
 	this->httpServer = new QHttpServer(this);
@@ -50,11 +51,13 @@ void Application::initialize() {
 	qx::QxSqlDatabase::getSingleton()->setHostName("localhost");
 	qx::QxSqlDatabase::getSingleton()->setUserName("root");
 	qx::QxSqlDatabase::getSingleton()->setPassword("");
-
+	qx::service::QxConnect::getSingleton()->setPort(8001);
+	qx::service::QxConnect::getSingleton()->setSerializationType(qx::service::QxConnect::serialization_json);
 	qx::dao::create_table<Plugin>();
 
 	QDir pluginsDir = QDir(QCoreApplication::applicationDirPath());
 	pluginsDir.cd("plugins");
+	pluginsDir.cd("server");
 	const auto entryList = pluginsDir.entryList(QDir::Files);
 	for (const QString &fileName : entryList) {
 		try {
@@ -88,6 +91,9 @@ void Application::initialize() {
 				});
 	}
 	this->httpServer->listen(QHostAddress::Any, 8000);
+    m_pThreadPool.reset(new qx::service::QxThreadPool());
+    QObject::connect(m_pThreadPool.get(), SIGNAL(error(const QString &, qx::service::QxTransaction_ptr)), this, SLOT(onError(const QString &, qx::service::QxTransaction_ptr)));
+    m_pThreadPool->start();
 	ConsoleInput *input = new ConsoleInput();
 	connect(this, &Application::startInput, input, &ConsoleInput::execute);
 	connect(input, &ConsoleInput::input, this, &Application::handleUserInput);
@@ -96,6 +102,10 @@ void Application::initialize() {
 	emit startInput();
 }
 
+void Application::onError(const QString & err, qx::service::QxTransaction_ptr transaction)
+{
+   qDebug() << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm") + " : " + err;
+}
 void Application::registerAuthProvider(AuthProviderInterface *authProvider) {
 	authProviders.append(authProvider);
 }

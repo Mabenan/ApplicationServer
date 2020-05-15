@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <ApplicationServerInterface>
 #include <QHttpServer>
+#include <QxServices.h>
 
 
 class APPLICATIONSERVERCORE_EXPORT Application : public ApplicationServerInterface
@@ -20,6 +21,7 @@ private:
     QHttpServer * httpServer;
     QMap<QString, QObject *> genericValues;
     QMap<QString, QList<QObject *>> genericListValues;
+    qx::service::QxThreadPool_ptr m_pThreadPool; // Server thread pool to receive all requests
 public:
     explicit Application(QObject *parent = nullptr);
     void handleUserInput(QString);
@@ -35,6 +37,7 @@ signals:
     void startInput();
 public slots:
     void start();
+    void onError(const QString & err, qx::service::QxTransaction_ptr transaction);
 
     // ApplicationServerInterface interface
 public:

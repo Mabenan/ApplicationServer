@@ -1,6 +1,7 @@
 set(target "ApplicationServerCore")
 
 add_definitions(-DAPPLICATIONSERVERCORE_LIBRARY)
+add_definitions(-D_QX_ENABLE_QT_NETWORK)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
