@@ -2,7 +2,6 @@
 #define APPLICATIONSERVERCORE_GLOBAL_H
 
 #include <QtCore/qglobal.h>
-#include <QxOrm.h>
 
 #if defined(APPLICATIONSERVERCORE_LIBRARY)
 #  define APPLICATIONSERVERCORE_EXPORT Q_DECL_EXPORT

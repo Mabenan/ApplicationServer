@@ -8,8 +8,8 @@
 #include <QDebug>
 #include <ApplicationServerInterface>
 #include <QHttpServer>
-#include <QxServices.h>
-
+#include <QxOrm.h>
+#include <QxService/QxThreadPool.h>
 
 class APPLICATIONSERVERCORE_EXPORT Application : public ApplicationServerInterface
 {

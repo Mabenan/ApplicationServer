@@ -1,4 +1,4 @@
-
+include(../QxOrm/QxOrm.cmake)
 if(NOT CMAKE_PROJECT_NAME)
 project("ApplicationServer" LANGUAGES CXX)
 set(EXEC_FOLDER "bin")
@@ -23,9 +23,3 @@ add_subdirectory(ApplicationServer)
 if(${PACKAGE})
 include("Package.cmake")
 endif()
-
-
-install(
-  EXPORT ApplicationServer
-  DESTINATION ${LIB_FOLDER}
-  )

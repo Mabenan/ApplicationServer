@@ -9,6 +9,7 @@
 #define REPS_APPLICATIONSERVER_APPLICATIONSERVERCORE_SRC_PLUGIN_H_
 
 #include <ApplicationServerCore_global.h>
+#include <QxOrm.h>
 class APPLICATIONSERVERCORE_EXPORT Plugin {
 
 public:

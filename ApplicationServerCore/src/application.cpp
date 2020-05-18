@@ -8,7 +8,9 @@
 #include <WebInterface.h>
 #include <QxOrm.h>
 #include <Plugin.h>
-#include <QxConnect.h>
+#include <QxServices.h>
+#include <QxOrm.h>
+#include <QxService/QxThreadPool.h>
 Application::Application(QObject *parent) :
 		ApplicationServerInterface(parent) {
 	this->httpServer = new QHttpServer(this);
