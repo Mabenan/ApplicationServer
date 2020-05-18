@@ -6,9 +6,10 @@
 #include <QObject>
 #include <QtPlugin>
 #include <qstring.h>
-#include <QHttpServer>
 #include <ApplicationServerInterface_export.h>
-
+#include <QxOrm.h>
+#include <QxServices.h>
+#include <QxHttpServer/QxHttpServer.h>
 class APPLICATION_SERVER_INTERFACE WebInterface : public QObject
 {
     Q_OBJECT
@@ -20,6 +21,6 @@ public:
 
     virtual QString getName() const = 0;
     virtual QString getRoute(ApplicationServerInterface * app) = 0;
-    virtual QHttpServerResponse execute(const QHttpServerRequest * request, ApplicationServerInterface * app) = 0;
+    virtual void execute(qx::QxHttpRequest  & request, qx::QxHttpResponse & response, ApplicationServerInterface * app) = 0;
 };
 #endif // WebInterface_H

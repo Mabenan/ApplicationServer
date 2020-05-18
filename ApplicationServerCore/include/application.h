@@ -7,9 +7,6 @@
 #include <QMap>
 #include <QDebug>
 #include <ApplicationServerInterface>
-#include <QHttpServer>
-#include <QxOrm.h>
-#include <QxService/QxThreadPool.h>
 
 class APPLICATIONSERVERCORE_EXPORT Application : public ApplicationServerInterface
 {
@@ -18,7 +15,7 @@ private:
     QMap<QString, CommandInterface*> commands;
     QMap<QString, WebInterface*> webInterfaces;
     QList<AuthProviderInterface *> authProviders;
-    QHttpServer * httpServer;
+	qx::QxHttpServer httpServer;
     QMap<QString, QObject *> genericValues;
     QMap<QString, QList<QObject *>> genericListValues;
     qx::service::QxThreadPool_ptr m_pThreadPool; // Server thread pool to receive all requests

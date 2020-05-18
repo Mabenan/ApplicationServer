@@ -6,14 +6,11 @@
 #include <QLibraryInfo>
 #include <QPluginLoader>
 #include <WebInterface.h>
-#include <QxOrm.h>
 #include <Plugin.h>
-#include <QxServices.h>
-#include <QxOrm.h>
-#include <QxService/QxThreadPool.h>
+#include <QxHttpServer/QxHttpServer.h>
+#include <QRegExp>
 Application::Application(QObject *parent) :
 		ApplicationServerInterface(parent) {
-	this->httpServer = new QHttpServer(this);
 }
 void Application::start() {
 	this->initialize();
@@ -54,7 +51,8 @@ void Application::initialize() {
 	qx::QxSqlDatabase::getSingleton()->setUserName("root");
 	qx::QxSqlDatabase::getSingleton()->setPassword("");
 	qx::service::QxConnect::getSingleton()->setPort(8001);
-	qx::service::QxConnect::getSingleton()->setSerializationType(qx::service::QxConnect::serialization_json);
+	qx::service::QxConnect::getSingleton()->setSerializationType(
+			qx::service::QxConnect::serialization_json);
 	qx::dao::create_table<Plugin>();
 
 	QDir pluginsDir = QDir(QCoreApplication::applicationDirPath());
@@ -86,16 +84,20 @@ void Application::initialize() {
 			qDebug() << exc->what();
 		}
 	}
-	for (WebInterface *webIf : this->webInterfaces.values()) {
-		this->httpServer->route(webIf->getRoute(this),
-				[webIf, this](const QHttpServerRequest &request) {
-					return webIf->execute(&request, this);
-				});
-	}
-	this->httpServer->listen(QHostAddress::Any, 8000);
-    m_pThreadPool.reset(new qx::service::QxThreadPool());
-    QObject::connect(m_pThreadPool.get(), SIGNAL(error(const QString &, qx::service::QxTransaction_ptr)), this, SLOT(onError(const QString &, qx::service::QxTransaction_ptr)));
-    m_pThreadPool->start();
+	this->httpServer.dispatch("GET", "/*",
+			[this](qx::QxHttpRequest &request,
+					qx::QxHttpResponse &response) {
+				QUrl url = request.url();
+				for (WebInterface *webIf : this->webInterfaces.values()) {
+					QString route = webIf->getRoute(this);
+					QString path = url.path();
+					QRegExp exp = QRegExp(route, Qt::CaseInsensitive);
+					if(exp.exactMatch(path)){
+						webIf->execute(request, response, this);
+					}
+				}
+			});
+	this->httpServer.startServer();
 	ConsoleInput *input = new ConsoleInput();
 	connect(this, &Application::startInput, input, &ConsoleInput::execute);
 	connect(input, &ConsoleInput::input, this, &Application::handleUserInput);
@@ -104,9 +106,11 @@ void Application::initialize() {
 	emit startInput();
 }
 
-void Application::onError(const QString & err, qx::service::QxTransaction_ptr transaction)
-{
-   qDebug() << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm") + " : " + err;
+void Application::onError(const QString &err,
+		qx::service::QxTransaction_ptr transaction) {
+	qDebug()
+			<< QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm") + " : "
+					+ err;
 }
 void Application::registerAuthProvider(AuthProviderInterface *authProvider) {
 	authProviders.append(authProvider);
@@ -136,32 +140,32 @@ bool Application::isUserAuthorized(QString user, QString authObject,
 	}
 
 }
-QObject * Application::getValue(QString valueName){
-	if(!this->genericValues.contains(valueName)){
+QObject* Application::getValue(QString valueName) {
+	if (!this->genericValues.contains(valueName)) {
 		return nullptr;
 	}
 	return this->genericValues[valueName];
 }
 
-QList<QObject *> Application::getValues(QString valueName) {
-	if(!this->genericListValues.contains(valueName)){
-			return QList<QObject *>();
-		}
-		return this->genericListValues[valueName];
+QList<QObject*> Application::getValues(QString valueName) {
+	if (!this->genericListValues.contains(valueName)) {
+		return QList<QObject*>();
+	}
+	return this->genericListValues[valueName];
 }
 
-void Application::setValue(QString valueName, QObject * value) {
-	if(!this->genericValues.contains(valueName)){
-			this->genericValues.insert(valueName, value);
-		}
-    this->genericValues[valueName] = value;
+void Application::setValue(QString valueName, QObject *value) {
+	if (!this->genericValues.contains(valueName)) {
+		this->genericValues.insert(valueName, value);
+	}
+	this->genericValues[valueName] = value;
 
 }
 
-void Application::addValue(QString valueName, QObject * value) {
-	if(!this->genericListValues.contains(valueName)){
-				this->genericListValues.insert(valueName, QList<QObject *>());
-			}
+void Application::addValue(QString valueName, QObject *value) {
+	if (!this->genericListValues.contains(valueName)) {
+		this->genericListValues.insert(valueName, QList<QObject*>());
+	}
 	this->genericListValues[valueName].append(value);
 }
 
