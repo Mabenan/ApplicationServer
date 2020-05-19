@@ -7,6 +7,8 @@
 #include <QMap>
 #include <QDebug>
 #include <ApplicationServerInterface>
+#include <QxHttpServer/QxHttpServer.h>
+#include <QxService/QxThreadPool.h>
 
 class APPLICATIONSERVERCORE_EXPORT Application : public ApplicationServerInterface
 {
