@@ -1,172 +1,166 @@
 #include <application.h>
 #include <consoleinput.h>
 
+#include <Plugin.h>
 #include <QCoreApplication>
 #include <QDir>
 #include <QLibraryInfo>
 #include <QPluginLoader>
-#include <WebInterface.h>
-#include <Plugin.h>
-#include <QxHttpServer/QxHttpServer.h>
 #include <QRegExp>
-Application::Application(QObject *parent) :
-		ApplicationServerInterface(parent) {
-}
-void Application::start() {
-	this->initialize();
-}
+#include <QxHttpServer/QxHttpServer.h>
+#include <WebInterface.h>
 
-QList<QString> Application::GetCommands() {
-	return this->commands.keys();
-}
+constexpr int inputWaitDetermin = 1000;
+constexpr int serverPort = 8001;
+Application::Application(QObject *parent)
+    : ApplicationServerInterface(parent) {}
+void Application::start() { this->initialize(); }
+
+QList<QString> Application::GetCommands() { return this->commands.keys(); }
 void Application::registerCommand(CommandInterface *commandInterface) {
 
-	this->commands.insert(commandInterface->getName(), commandInterface);
+  this->commands.insert(commandInterface->getName(), commandInterface);
 }
 void Application::registerWebInterface(WebInterface *webInterface) {
 
-	this->webInterfaces.insert(webInterface->getName(), webInterface);
+  this->webInterfaces.insert(webInterface->getName(), webInterface);
 }
-void Application::handleUserInput(QString command) {
-	if (this->commands.contains(command)) {
-		this->commands[command]->execute(this);
-	} else if (command == "stop") {
-		inputThread.quit();
-		if (inputThread.wait(1000)) {
-			inputThread.terminate();
-			inputThread.wait();
-		}
-		emit finished();
-	} else {
-		qWarning() << "Command: " << command << "not found";
-	}
+void Application::handleUserInput(const QString &command) {
+  if (this->commands.contains(command)) {
+    this->commands.value(command)->execute(this);
+  } else if (command == QLatin1String("stop")) {
+    inputThread.quit();
+    if (inputThread.wait(inputWaitDetermin)) {
+      inputThread.terminate();
+      inputThread.wait();
+    }
+    Q_EMIT finished();
+  } else {
+    qWarning() << "Command: " << command << "not found";
+  }
 }
 
 void Application::initialize() {
 
-	// Init parameters to connect to database
-	qx::QxSqlDatabase::getSingleton()->setDriverName("QSQLITE");
-	qx::QxSqlDatabase::getSingleton()->setDatabaseName("./test_qxorm.db");
-	qx::QxSqlDatabase::getSingleton()->setHostName("localhost");
-	qx::QxSqlDatabase::getSingleton()->setUserName("root");
-	qx::QxSqlDatabase::getSingleton()->setPassword("");
-	qx::service::QxConnect::getSingleton()->setPort(8001);
-	qx::service::QxConnect::getSingleton()->setSerializationType(
-			qx::service::QxConnect::serialization_json);
-	qx::dao::create_table<Plugin>();
+  // Init parameters to connect to database
+  qx::QxSqlDatabase::getSingleton()->setDriverName(QStringLiteral("QSQLITE"));
+  qx::QxSqlDatabase::getSingleton()->setDatabaseName(
+      QStringLiteral("./test_qxorm.db"));
+  qx::QxSqlDatabase::getSingleton()->setHostName(QStringLiteral("localhost"));
+  qx::QxSqlDatabase::getSingleton()->setUserName(QStringLiteral("root"));
+  qx::QxSqlDatabase::getSingleton()->setPassword(QLatin1String(""));
+  qx::service::QxConnect::getSingleton()->setPort(serverPort);
+  qx::service::QxConnect::getSingleton()->setSerializationType(
+      qx::service::QxConnect::serialization_json);
+  qx::dao::create_table<Plugin>();
 
-	QDir pluginsDir = QDir(QCoreApplication::applicationDirPath());
-	pluginsDir.cd("plugins");
-	pluginsDir.cd("server");
-	const auto entryList = pluginsDir.entryList(QDir::Files);
-	for (const QString &fileName : entryList) {
-		try {
-			QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
-			QObject *plugin = loader.instance();
-			auto pluginInterface = qobject_cast<
-					ApplicationServerPluginInterface*>(plugin);
-			if (pluginInterface) {
-				QString plugin_id = loader.fileName();
-				Plugin *pluginObject = new Plugin();
-				pluginObject->id = plugin_id;
-				QSqlError daoError = qx::dao::fetch_by_id(pluginObject);
-				if (daoError.type() != QSqlError::NoError) {
-					qx::dao::insert(pluginObject);
-				}
-				if (!pluginObject->installed) {
-					pluginInterface->install(this);
-					pluginObject->installed = true;
-					qx::dao::save(pluginObject);
-				}
-				pluginInterface->init(this);
-			}
-		} catch (std::exception *exc) {
-			qDebug() << exc->what();
-		}
-	}
-	this->httpServer.dispatch("GET", "/*",
-			[this](qx::QxHttpRequest &request,
-					qx::QxHttpResponse &response) {
-				QUrl url = request.url();
-				for (WebInterface *webIf : this->webInterfaces.values()) {
-					QString route = webIf->getRoute(this);
-					QString path = url.path();
-					QRegExp exp = QRegExp(route, Qt::CaseInsensitive);
-					if(exp.exactMatch(path)){
-						webIf->execute(request, response, this);
-					}
-				}
-			});
-	this->httpServer.startServer();
-	ConsoleInput *input = new ConsoleInput();
-	connect(this, &Application::startInput, input, &ConsoleInput::execute);
-	connect(input, &ConsoleInput::input, this, &Application::handleUserInput);
-	input->moveToThread(&inputThread);
-	inputThread.start();
-	emit startInput();
+  QDir pluginsDir = QDir(QCoreApplication::applicationDirPath());
+  pluginsDir.cd(QStringLiteral("plugins"));
+  pluginsDir.cd(QStringLiteral("server"));
+  const auto entryList = pluginsDir.entryList(QDir::Files);
+  for (const QString &fileName : entryList) {
+    try {
+      QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
+      QObject *plugin = loader.instance();
+      auto pluginInterface =
+          qobject_cast<ApplicationServerPluginInterface *>(plugin);
+      if (pluginInterface) {
+        QString plugin_id = loader.fileName();
+        auto *pluginObject = new Plugin();
+        pluginObject->setId(plugin_id);
+        QSqlError daoError = qx::dao::fetch_by_id(pluginObject);
+        if (daoError.type() != QSqlError::NoError) {
+          qx::dao::insert(pluginObject);
+        }
+        if (!pluginObject->getInstalled()) {
+          pluginInterface->install(this);
+          pluginObject->setInstalled(true);
+          qx::dao::save(pluginObject);
+        }
+        pluginInterface->init(this);
+      }
+    } catch (std::exception *exc) {
+      qDebug() << exc->what();
+    }
+  }
+  this->httpServer.dispatch(
+      QStringLiteral("GET"), QStringLiteral("/*"),
+      [this](qx::QxHttpRequest &request, qx::QxHttpResponse &response) {
+        QUrl url = request.url();
+        for (WebInterface *webIf : this->webInterfaces.values()) {
+          QRegExp exp = QRegExp(webIf->getRoute(this), Qt::CaseInsensitive);
+          if (exp.exactMatch(url.path())) {
+            webIf->execute(request, response, this);
+          }
+        }
+      });
+  this->httpServer.startServer();
+  auto *input = new ConsoleInput();
+  connect(this, &Application::startInput, input, &ConsoleInput::execute);
+  connect(input, &ConsoleInput::input, this, &Application::handleUserInput);
+  input->moveToThread(&inputThread);
+  inputThread.start();
+  Q_EMIT startInput();
 }
 
-void Application::onError(const QString &err,
-		qx::service::QxTransaction_ptr transaction) {
-	qDebug()
-			<< QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm") + " : "
-					+ err;
+void Application::onError(
+    const QString &err,
+    const qx::service::QxTransaction_ptr & /*transaction*/) {
+  qDebug() << QDateTime::currentDateTime().toString(
+                  QStringLiteral("dd.MM.yyyy hh:mm")) +
+                  " : " + err;
 }
 void Application::registerAuthProvider(AuthProviderInterface *authProvider) {
-	authProviders.append(authProvider);
+  authProviders.append(authProvider);
 }
 
 bool Application::isUserAuthorized(QString user, QString authObject,
-		QMap<QString, QVariant> params) {
-	int globalAuthState = -1;
-	for (AuthProviderInterface *authProvider : this->authProviders) {
-		int authState = authProvider->isUserAuthorized(user, authObject, params,
-				this);
-		if (authState > globalAuthState) {
-			globalAuthState = authState;
-		}
-	}
-	switch (globalAuthState) {
-	case -1:
-		return false;
-		break;
-	case 0:
-		return true;
-	case 1:
-		return false;
-	default:
-		return false;
-		break;
-	}
-
-}
-QObject* Application::getValue(QString valueName) {
-	if (!this->genericValues.contains(valueName)) {
-		return nullptr;
-	}
-	return this->genericValues[valueName];
+                                   QMap<QString, QVariant> params) {
+  int globalAuthState = -1;
+  for (AuthProviderInterface *authProvider : qAsConst(this->authProviders)) {
+    int authState =
+        authProvider->isUserAuthorized(user, authObject, params, this);
+    if (authState > globalAuthState) {
+      globalAuthState = authState;
+    }
+  }
+  switch (globalAuthState) {
+  case -1:
+    return false;
+  case 0:
+    return true;
+  case 1:
+    return false;
+  default:
+    return false;
+  }
 }
 
-QList<QObject*> Application::getValues(QString valueName) {
-	if (!this->genericListValues.contains(valueName)) {
-		return QList<QObject*>();
-	}
-	return this->genericListValues[valueName];
+QObject *Application::getValue(QString valueName) {
+  if (!this->genericValues.contains(valueName)) {
+    return nullptr;
+  }
+  return this->genericValues[valueName];
 }
 
 void Application::setValue(QString valueName, QObject *value) {
-	if (!this->genericValues.contains(valueName)) {
-		this->genericValues.insert(valueName, value);
-	}
-	this->genericValues[valueName] = value;
+  if (!this->genericValues.contains(valueName)) {
+    this->genericValues.insert(valueName, value);
+  }
+  this->genericValues[valueName] = value;
+}
 
+QList<QObject *> Application::getValues(QString valueName) {
+  if (!this->genericListValues.contains(valueName)) {
+    return QList<QObject *>();
+  }
+  return this->genericListValues[valueName];
 }
 
 void Application::addValue(QString valueName, QObject *value) {
-	if (!this->genericListValues.contains(valueName)) {
-		this->genericListValues.insert(valueName, QList<QObject*>());
-	}
-	this->genericListValues[valueName].append(value);
+  if (!this->genericListValues.contains(valueName)) {
+    this->genericListValues.insert(valueName, QList<QObject *>());
+  }
+  this->genericListValues[valueName].append(value);
 }
-
 #include "moc_application.cpp"

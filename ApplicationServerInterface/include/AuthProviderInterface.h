@@ -3,20 +3,19 @@
 
 #include <ApplicationServerInterface.h>
 
+#include <ApplicationServerInterface_export.h>
 #include <QObject>
 #include <qstring.h>
-#include <ApplicationServerInterface_export.h>
 
-class APPLICATION_SERVER_INTERFACE AuthProviderInterface : public QObject
-{
-    Q_OBJECT
+class APPLICATION_SERVER_INTERFACE AuthProviderInterface : public QObject {
+  Q_OBJECT
 public:
-	AuthProviderInterface(QObject* parent): QObject(parent){
+  AuthProviderInterface(QObject *parent = nullptr) : QObject(parent) {}
+  ~AuthProviderInterface() = default;
 
-    }
-    virtual~AuthProviderInterface(){}
-
-    virtual QString getName() const = 0;
-    virtual int isUserAuthorized(QString user, QString authObject, QMap<QString, QVariant> params, ApplicationServerInterface * app) = 0;
+  virtual QString getName() const = 0;
+  virtual int isUserAuthorized(const QString &user, QString authObject,
+                               QMap<QString, QVariant> params,
+                               ApplicationServerInterface *app) = 0;
 };
 #endif // AUTHPRODVIDERINTERFACE_H

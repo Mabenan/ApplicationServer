@@ -11,16 +11,17 @@
 REGISTER_CPP_APPLICATIONSERVERCORE_LIBRARY(Plugin)
 namespace qx {
 
-template<> void register_class(QxClass<Plugin> &t) {
-	t.setName("t_plugin");
-	t.id(&Plugin::id, "plugin_id");
-	t.data(&Plugin::installed, "installed");
+template <> void register_class(QxClass<Plugin> &t) {
+  t.setName(QStringLiteral("t_plugin"));
+  t.id(&Plugin::id, QStringLiteral("plugin_id"));
+  t.data(&Plugin::installed, QStringLiteral("installed"));
 }
-}
+} // namespace qx
 
-Plugin::Plugin() {
-	this->installed = false;
-}
+bool Plugin::getInstalled() const { return installed; }
 
-Plugin::~Plugin() {
-}
+void Plugin::setInstalled(bool value) { installed = value; }
+
+QString Plugin::getId() const { return id; }
+
+void Plugin::setId(const QString &value) { id = value; }

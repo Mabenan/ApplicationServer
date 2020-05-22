@@ -16,10 +16,9 @@ void ConsoleInput::execute()
 		if (this->command == "stop") {
 			break;
 		}
-		emit input(QString(this->command.c_str()));
+		Q_EMIT input(QString::fromLatin1(this->command.c_str()));
 	} while (1 == 1);
-	emit input(QString(this->command.c_str()));
-	return;
+	Q_EMIT input(QString::fromLatin1(this->command.c_str()));
 }
 
 #include "moc_consoleinput.cpp"

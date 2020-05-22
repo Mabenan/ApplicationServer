@@ -13,15 +13,20 @@
 class APPLICATIONSERVERCORE_EXPORT Plugin {
 
 public:
-	QString id;
-	bool installed;
-public:
-	Plugin();
-	virtual ~Plugin();
+  QString id;
+  bool installed;
 
+public:
+  Plugin() {}
+  virtual ~Plugin() = default;
+  bool getInstalled() const;
+  void setInstalled(bool value);
+  QString getId() const;
+  void setId(const QString &value);
 };
 
-QX_REGISTER_PRIMARY_KEY(Plugin,QString);
-REGISTER_HPP_APPLICATIONSERVERCORE_LIBRARY(Plugin, qx::trait::no_base_class_defined, 0);
+QX_REGISTER_PRIMARY_KEY(Plugin, QString);
+REGISTER_HPP_APPLICATIONSERVERCORE_LIBRARY(Plugin,
+                                           qx::trait::no_base_class_defined, 0);
 
 #endif /* REPS_APPLICATIONSERVER_APPLICATIONSERVERCORE_SRC_PLUGIN_H_ */
