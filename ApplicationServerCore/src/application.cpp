@@ -87,7 +87,7 @@ void Application::initialize() {
       QStringLiteral("GET"), QStringLiteral("/*"),
       [this](qx::QxHttpRequest &request, qx::QxHttpResponse &response) {
         QUrl url = request.url();
-        for (WebInterface *webIf : this->webInterfaces.values()) {
+        Q_FOREACH (auto webIf, this->webInterfaces) {
           QRegExp exp = QRegExp(webIf->getRoute(this), Qt::CaseInsensitive);
           if (exp.exactMatch(url.path())) {
             webIf->execute(request, response, this);
@@ -114,8 +114,9 @@ void Application::registerAuthProvider(AuthProviderInterface *authProvider) {
   authProviders.append(authProvider);
 }
 
-bool Application::isUserAuthorized(QString user, QString authObject,
-                                   QMap<QString, QVariant> params) {
+bool Application::isUserAuthorized(const QString &user,
+                                   const QString &authObject,
+                                   const QMap<QString, QVariant> &params) {
   int globalAuthState = -1;
   for (AuthProviderInterface *authProvider : qAsConst(this->authProviders)) {
     int authState =
@@ -136,28 +137,28 @@ bool Application::isUserAuthorized(QString user, QString authObject,
   }
 }
 
-QObject *Application::getValue(QString valueName) {
+QObject *Application::getValue(const QString &valueName) {
   if (!this->genericValues.contains(valueName)) {
     return nullptr;
   }
   return this->genericValues[valueName];
 }
 
-void Application::setValue(QString valueName, QObject *value) {
+void Application::setValue(const QString &valueName, QObject *value) {
   if (!this->genericValues.contains(valueName)) {
     this->genericValues.insert(valueName, value);
   }
   this->genericValues[valueName] = value;
 }
 
-QList<QObject *> Application::getValues(QString valueName) {
+QList<QObject *> Application::getValues(const QString &valueName) {
   if (!this->genericListValues.contains(valueName)) {
     return QList<QObject *>();
   }
   return this->genericListValues[valueName];
 }
 
-void Application::addValue(QString valueName, QObject *value) {
+void Application::addValue(const QString &valueName, QObject *value) {
   if (!this->genericListValues.contains(valueName)) {
     this->genericListValues.insert(valueName, QList<QObject *>());
   }

@@ -46,13 +46,14 @@ public:
   void registerAuthProvider(AuthProviderInterface *authProvider) override;
 
   // ApplicationServerInterface interface
-public:
-  bool isUserAuthorized(QString user, QString authObject,
-                        QMap<QString, QVariant> params) override;
-  QObject *getValue(QString valueName) override;
-  void setValue(QString valueName, QObject *value) override;
-  QList<QObject *> getValues(QString valueName) override;
-  void addValue(QString valueName, QObject *value) override;
+  public:
+  bool isUserAuthorized(const QString &user,
+                            const QString &authObject,
+                            const QMap<QString, QVariant> &params) override;
+  QObject *getValue(const QString &valueName) override;
+  void setValue(const QString &valueName, QObject *value) override;
+  QList<QObject *> getValues(const QString &valueName) override;
+  void addValue(const QString &valueName, QObject *value) override;
 };
 
 #endif // APPLICATION_H

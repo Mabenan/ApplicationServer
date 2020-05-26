@@ -7,8 +7,7 @@
 #include <QObject>
 #include <QtPlugin>
 #include <qstring.h>
-constexpr auto ApplicationServerPluginInterface_iid =
-    "com.applicationserver.ApplicationServerPluginInterface/1.0";
+#define ApplicationServerPluginInterface_iid "com.applicationserver.ApplicationServerPluginInterface/1.0"
 
 class APPLICATION_SERVER_INTERFACE ApplicationServerPluginInterface
     : public QObject {

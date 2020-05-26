@@ -14,8 +14,8 @@ public:
   ~AuthProviderInterface() = default;
 
   virtual QString getName() const = 0;
-  virtual int isUserAuthorized(const QString &user, QString authObject,
-                               QMap<QString, QVariant> params,
+  virtual int isUserAuthorized(const QString &user, const QString &authObject,
+                               const QMap<QString, QVariant> &params,
                                ApplicationServerInterface *app) = 0;
 };
 #endif // AUTHPRODVIDERINTERFACE_H

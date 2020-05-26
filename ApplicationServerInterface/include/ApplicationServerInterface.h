@@ -18,12 +18,13 @@ public:
   virtual void registerWebInterface(WebInterface *webInterface) = 0;
   virtual void registerAuthProvider(AuthProviderInterface *authProvider) = 0;
 
-  virtual bool isUserAuthorized(QString user, QString authObject,
-                                QMap<QString, QVariant> params) = 0;
-  virtual QObject *getValue(QString valueName) = 0;
-  virtual void setValue(QString valueName, QObject *value) = 0;
-  virtual QList<QObject *> getValues(QString valueName) = 0;
-  virtual void addValue(QString valueName, QObject *value) = 0;
+  virtual bool isUserAuthorized(const QString &user,
+                                const QString &authObject,
+                                const QMap<QString, QVariant> &params) = 0;
+  virtual QObject *getValue(const QString &valueName) = 0;
+  virtual void setValue(const QString &valueName, QObject *value) = 0;
+  virtual QList<QObject *> getValues(const QString &valueName) = 0;
+  virtual void addValue(const QString &valueName, QObject *value) = 0;
 };
 
 #endif // APPLICATIONSERVERINTERFACE_H
