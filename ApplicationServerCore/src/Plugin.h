@@ -25,7 +25,7 @@ public:
   void setId(const QString &value);
 };
 
-QX_REGISTER_PRIMARY_KEY(Plugin, QString);
+QX_REGISTER_PRIMARY_KEY(Plugin, QString, id);
 REGISTER_HPP_APPLICATIONSERVERCORE_LIBRARY(Plugin,
                                            qx::trait::no_base_class_defined, 0);
 
