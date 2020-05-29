@@ -94,6 +94,17 @@ void Application::initialize() {
           }
         }
       });
+  this->httpServer.dispatch(
+              QStringLiteral("POST"), QStringLiteral("/*"),
+              [this](qx::QxHttpRequest &request, qx::QxHttpResponse &response) {
+                QUrl url = request.url();
+                Q_FOREACH (auto webIf, this->webInterfaces) {
+                  QRegExp exp = QRegExp(webIf->getRoute(this), Qt::CaseInsensitive);
+                  if (exp.exactMatch(url.path())) {
+                    webIf->execute(request, response, this);
+                  }
+                }
+              });
   this->httpServer.startServer();
   auto *input = new ConsoleInput();
   connect(this, &Application::startInput, input, &ConsoleInput::execute);
