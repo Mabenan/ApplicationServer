@@ -15,6 +15,6 @@ public:
   ~CommandInterface() = default;
 
   virtual QString getName() const = 0;
-  virtual void execute(ApplicationServerInterface *app) = 0;
+  virtual void execute(ApplicationServerInterface *app, QStringList args) = 0;
 };
 #endif // COMMANDINTERFACE_H

@@ -26,9 +26,11 @@ void Application::registerWebInterface(WebInterface *webInterface) {
   this->webInterfaces.insert(webInterface->getName(), webInterface);
 }
 void Application::handleUserInput(const QString &command) {
-  if (this->commands.contains(command)) {
-    this->commands.value(command)->execute(this);
-  } else if (command == QLatin1String("stop")) {
+  QStringList commandParts = command.split(" ");
+  QString commandName = commandParts.takeFirst();
+  if (this->commands.contains(commandName)) {
+    this->commands.value(commandName)->execute(this, commandParts);
+  } else if (commandName == QLatin1String("stop")) {
     inputThread.quit();
     if (inputThread.wait(inputWaitDetermin)) {
       inputThread.terminate();
