@@ -26,10 +26,13 @@ FOREACH(src ${SRC})
   message(${src})
 ENDFOREACH()
 add_library(${target} SHARED ${SRC})
+
+if(COMMAND target_precompile_headers)
 target_precompile_headers(${target}
  PUBLIC
   "ApplicationServerCore_global.h"
  )
+ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 find_package(Qt5Core REQUIRED)
 qt5_use_modules(${target} Core)
